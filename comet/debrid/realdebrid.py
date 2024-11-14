@@ -123,22 +123,6 @@ class RealDebrid:
 
     async def generate_download_link(self, hash: str, index: str):
         try:
-            check_blacklisted = await self.session.get("https://real-debrid.com/vpn")
-            check_blacklisted = await check_blacklisted.text()
-            if (
-                "Your ISP or VPN provider IP address is currently blocked on our website"
-                in check_blacklisted
-            ):
-                self.proxy = settings.DEBRID_PROXY_URL
-                if not self.proxy:
-                    logger.warning(
-                        "Real-Debrid blacklisted server's IP. No proxy found."
-                    )
-                else:
-                    logger.warning(
-                        f"Real-Debrid blacklisted server's IP. Switching to proxy {self.proxy} for {hash}|{index}"
-                    )
-
             add_magnet = await self.session.post(
                 f"{self.api_url}/torrents/addMagnet",
                 data={"magnet": f"magnet:?xt=urn:btih:{hash}", "ip": self.ip},
